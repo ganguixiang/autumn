@@ -21,10 +21,6 @@ server:
 spring:
 #  profiles:
 #    active: dev
-  mvc:
-    static-path-pattern: /static/**
-    view:
-      prefix: /WEB-INF/view
   http:
     converters:
       preferred-json-mapper: fastjson
@@ -45,7 +41,7 @@ spring:
     enabled: true # 是否启用Thymeleaf
     encoding: utf-8 # 模板编码
     excluded-view-names:
-    mode: HTML5
+    mode: LEGACYHTML5
     prefix: classpath:/templates/ # 模板路径
     suffix: .html
     template-resolver-order:

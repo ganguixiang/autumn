@@ -11,4 +11,5 @@ import java.util.List;
  */
 @NoRepositoryBean
 public interface AbstractRepository<T> extends JpaRepository<T, String>, AbstractRepositoryCustom<T> {
+
 }

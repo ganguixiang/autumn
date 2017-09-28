@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -81,8 +82,6 @@ public abstract class IdEntity {
         this.creator = creator;
     }
 
-    // 设定JSON序列化时的日期格式
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getCreateDate() {
         return createDate;
     }
@@ -99,8 +98,6 @@ public abstract class IdEntity {
         this.modifier = modifier;
     }
 
-    // 设定JSON序列化时的日期格式
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getModifyDate() {
         return modifyDate;
     }

@@ -12,7 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepositoryImpl extends AbstractRepositoryImpl<User> implements UserRepositoryCustom {
 
-    public UserRepositoryImpl() {
-        System.out.println("UserRepositoryImpl");
-    }
 }

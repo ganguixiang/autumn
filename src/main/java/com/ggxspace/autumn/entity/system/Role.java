@@ -41,7 +41,7 @@ public class Role extends IdEntity {
      * 懒加载
      * 关系在user中维护，所以role是被维护方，user是维护方
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.LAZY, mappedBy = "roles")
+    @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.EAGER, mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 
     public Role() {
