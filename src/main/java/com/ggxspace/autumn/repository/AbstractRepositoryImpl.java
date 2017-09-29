@@ -1,6 +1,7 @@
 package com.ggxspace.autumn.repository;
 
 import com.ggxspace.autumn.entity.IdEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by ganguixiang on 2017/9/27.
  */
 //@Repository
-public class AbstractRepositoryImpl<T> implements AbstractRepositoryCustom<T> {
+public class AbstractRepositoryImpl<T extends IdEntity> implements AbstractRepositoryCustom<T> {
 
     @PersistenceContext
     private EntityManager em;
@@ -30,10 +31,16 @@ public class AbstractRepositoryImpl<T> implements AbstractRepositoryCustom<T> {
      */
     private Class<T> entityClass;
 
+//    public AbstractRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+//        super(entityInformation, entityManager);
+//        this.em = entityManager;
+//        this.init();
+//    }
+
     /**
      * 构造器反射获取T.class
      */
-    public AbstractRepositoryImpl() {
+    public void AbstractRepositoryImpl() {
         Class cls = getClass();
         ParameterizedType parameterizedType = null;
         // 递归获取cls的参数直至不是Object
@@ -62,7 +69,7 @@ public class AbstractRepositoryImpl<T> implements AbstractRepositoryCustom<T> {
 //    }
 
 
-    public T save(T entity) {
+    public T update(T entity) {
         return em.merge(entity);
     }
 }

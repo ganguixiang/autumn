@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色实体
@@ -32,7 +34,7 @@ public class Role extends IdEntity {
      * 关系在role中维护，所以permission是被维护方，role是维护方
      */
     @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.EAGER)
-    private List<Permission> permissions = new ArrayList<>();
+    private Set<Permission> permissions = new HashSet<>();
 
     /**
      * 角色-用户关系
@@ -42,7 +44,7 @@ public class Role extends IdEntity {
      * 关系在user中维护，所以role是被维护方，user是维护方
      */
     @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.EAGER, mappedBy = "roles")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     public Role() {
     }
@@ -55,19 +57,19 @@ public class Role extends IdEntity {
         this.role = role;
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

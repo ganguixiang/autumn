@@ -12,7 +12,7 @@ import java.util.List;
  * Created by ganguixiang on 2017/9/27.
  */
 //@Service
-public interface AbstractService<T> {
+public interface AbstractService<T extends IdEntity> {
 
     /**
      * 根据主键获取实体
@@ -72,6 +72,8 @@ public interface AbstractService<T> {
      * @return
      */
     public List<T> save(List<T> entities);
+
+    T update(T entity);
 
     /**
      * 计数

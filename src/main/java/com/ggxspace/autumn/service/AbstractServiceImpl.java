@@ -1,16 +1,23 @@
 package com.ggxspace.autumn.service;
 
+import com.ggxspace.autumn.entity.IdEntity;
 import com.ggxspace.autumn.repository.AbstractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by ganguixiang on 2017/9/27.
  */
-public class AbstractServiceImpl<T> implements AbstractService<T> {
+public class AbstractServiceImpl<T extends IdEntity> implements AbstractService<T> {
 
     @Autowired
     private AbstractRepository<T> repository;
@@ -90,6 +97,10 @@ public class AbstractServiceImpl<T> implements AbstractService<T> {
      */
     public List<T> save(List<T> entities) {
         return repository.save(entities);
+    }
+
+    public T update(T entity) {
+        return repository.update(entity);
     }
 
     /**

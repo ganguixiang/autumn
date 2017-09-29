@@ -3,7 +3,7 @@
         <div class="handle-box">
             <el-input v-model="input" style="width: 200px;" placeholder="请输入名称"></el-input>
             <el-button type="primary" icon="search">搜索</el-button>
-            <el-button type="primary" icon="add" @click="addDialogVisible = true">添加</el-button>
+            <el-button type="primary" icon="add" @click="add">添加</el-button>
         </div>
         <div class="table">
             <el-table ref="table" :data="roles" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
@@ -14,7 +14,7 @@
                 <el-table-column label="操作">
                     <template scope="scope">
                         <el-button type="success" size="small" @click="edit(scope.row.id)">编辑</el-button>
-                        <el-button type="error" size="small">删除</el-button>
+                        <el-button type="error" size="small" @click="doDelete(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
 
@@ -29,7 +29,9 @@
                 </el-pagination>
             </div>
         </div>
+        <!-- 添加用户对话框 -->
         <div th:replace="/role/add :: add"></div>
+        <!-- 编辑用户对话框 -->
         <div th:replace="/role/edit :: edit"></div>
 
     </div>

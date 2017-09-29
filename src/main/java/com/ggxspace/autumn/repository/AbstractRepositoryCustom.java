@@ -1,14 +1,15 @@
 package com.ggxspace.autumn.repository;
 
 
-import org.springframework.data.jpa.repository.Query;
-
+import com.ggxspace.autumn.entity.IdEntity;
 import javax.transaction.Transactional;
 
 /**
  * Created by ganguixiang on 2017/9/27.
  */
-public interface AbstractRepositoryCustom<T> {
+@Transactional
+public interface AbstractRepositoryCustom<T extends IdEntity> {
 //    List<T> findAll();
 //    void logicDelete(String id);
+    T update(T entity);
 }

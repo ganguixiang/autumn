@@ -52,12 +52,11 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 #    filters: log4j,wall,mergeStat
   jpa:
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
+    hibernate:
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
 
 ##########################################################
 ###################  开发环境的profile  ###################
