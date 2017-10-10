@@ -5,4 +5,6 @@ var userPath = '';
 // 角色管理路径
 var rolePath = '/role/';
 // 权限管理路径
-var permissionPath = '';
+var permissionPath = '/permission/';
+// 菜单管理路径
+var menuPath  = '/menu/';

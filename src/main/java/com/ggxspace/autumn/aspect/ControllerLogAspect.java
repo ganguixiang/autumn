@@ -61,6 +61,9 @@ public class ControllerLogAspect {
             result = handleException(pjp, e);
         }
 
+        // 结果
+        LOGGER.info("result = {}", result);
+
         // 处理请求所需时间
         LOGGER.info("cost time={}ms", System.currentTimeMillis() - startTime);
         return result;
@@ -75,7 +78,7 @@ public class ControllerLogAspect {
      */
     private Result<?> handleException(ProceedingJoinPoint pjp, Throwable e) {
         Result<?> result = new Result<>();
-        LOGGER.error("{} error {}", pjp.getSignature(), e);
+        LOGGER.error("{}", e);
         result.setCode(Result.FAIL);
         result.setMessage(e.toString());
 

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
  * 权限service
  * Created by ganguixiang on 2017/9/27.
  */
-@Service
+//@Service
 public class PermissionServiceImpl extends AbstractServiceImpl<Permission> implements PermissionService {
 }

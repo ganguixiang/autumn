@@ -9,8 +9,6 @@ var index = new Vue({
         }],
     },
     mounted: function() {
-        // 设置左边导航栏的高度
-        $('#sidebar').height($(window).height()-70);
     },
     methods: {
         handleOpen: function(key, keyPath) {

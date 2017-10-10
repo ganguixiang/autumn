@@ -10,18 +10,40 @@ public class RoleDTO extends BaseDTO {
     /**
      * 名称
      */
-    private String role;
+    private String name;
+
+    /**
+     * 标识
+     */
+    private String code;
 
     public RoleDTO(Role role) {
         super(role);
-        this.role = role.getRole();
+        this.name = role.getName();
+        this.code = role.getCode();
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "RoleDTO{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

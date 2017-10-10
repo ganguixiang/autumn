@@ -1,0 +1,88 @@
+<html lang="ZH" xmlns:th="http://www.thymeleaf.org">
+    <div id="menu">
+        <div class="handle-box">
+            <!--<el-input v-model="input" style="width: 200px;" placeholder="请输入名称"></el-input>-->
+            <!--<el-button type="primary" icon="search">搜索</el-button>-->
+        </div>
+        <div class="toolbar">
+            <el-button type="primary" icon="add" @click="goAdd">添加</el-button>
+        </div>
+        <div class="table">
+            <el-table
+                    :data="menuTrees"
+                    border
+                    style="width: 100%"
+                    :row-style="showTr">
+                <el-table-column v-for="(column, index) in columns" :key="column.dataIndex"
+                                 :label="column.text">
+                    <template scope="scope">
+                        <!-- 前面的空格 -->
+                        <span v-if="spaceIconShow(index)" v-for="(space, levelIndex) in scope.row.level" class="ms-tree-space"></span>
+                        <!-- 展开/关闭按钮 -->
+                        <button class="button is-outlined is-primary is-small" v-if="toggleIconShow(index,scope.row)" @click="toggle(scope.$index)">
+                            <!-- 加载按钮 -->
+                            <i v-if="scope.row._loading" class="el-icon-loading" aria-hidden="true"></i>
+                            <!-- 展开按钮 -->
+                            <i v-if="!scope.row._expanded && !scope.row._loading" class="el-icon-plus" aria-hidden="true"></i>
+                            <!-- 关闭按钮 -->
+                            <i v-if="scope.row._expanded && !scope.row._loading" class="el-icon-minus" aria-hidden="true"></i>
+                        </button>
+                        <span v-else-if="index===0" class="ms-tree-space"></span>
+                        {{scope.row[column.dataIndex]}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="260">
+                    <template scope="scope">
+                        <el-button type="primary" size="small" @click="goUpdate(scope.row.id)">
+                            编辑
+                        </el-button>
+                        <el-button type="success" size="small" @click="goAddChildren(scope.row)">添加下级菜单</el-button>
+                        <el-button
+                                size="small"
+                                type="danger"
+                                @click="doDelete(scope.row.id)">
+                            删除
+                        </el-button>
+
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <!-- 添加菜单对话框 -->
+        <div th:replace="/menu/add :: add"></div>
+        <!-- 编辑菜单对话框 -->
+        <div th:replace="/menu/edit :: edit"></div>
+
+        <el-dialog title="选择菜单" :visible.sync="selectParentDialogVisible" :close-on-press-escape=false :show-close=false>
+            <el-tree :data="parentTree" :highlight-current="true" @node-click="selectMenu" :props="defaultProps">
+
+            </el-tree>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSelect">取 消</el-button>
+                <el-button type="primary" @click="confirmSelect">确 定</el-button>
+            </div>
+        </el-dialog>
+
+    </div>
+
+    <style>
+        .ms-tree-space{
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            font-family: 'Glyphicons Halflings';
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1;
+            width: 18px;
+            height: 14px;
+        }
+        .ms-tree-space::before{
+            content: "";
+        }
+        table td{
+            line-height: 26px;
+        }
+    </style>
+    <script th:src="@{/js/menu/list.js}" type="text/javascript" charset="utf-8"></script>
+</html>

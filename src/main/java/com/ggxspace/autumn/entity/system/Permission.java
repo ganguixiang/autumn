@@ -13,7 +13,7 @@ import java.util.List;
  * 权限实体
  * Created by ganguixiang on 2017/9/27.
  */
-@Entity
+//@Entity
 public class Permission extends IdEntity {
 
     /**
@@ -35,11 +35,11 @@ public class Permission extends IdEntity {
     private String url;
 
     /**
-     * 权限字符串
+     * 权限编码，授权标识
      * menu例子：role:*
      * button例子：role:create，role:update，role:delete，role:view
      */
-    private String permission;
+    private String code;
 
     /**
      * 父id
@@ -86,12 +86,12 @@ public class Permission extends IdEntity {
         this.url = url;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getCode() {
+        return code;
     }
 
-    public void setPermission(String permission) {
-        this.permission = permission;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getParentId() {

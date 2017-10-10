@@ -20,21 +20,26 @@ import java.util.Set;
 public class Role extends IdEntity {
 
     /**
+     * 角色名称
+     */
+    private String name;
+
+    /**
      * 角色标识
      * 程序中判断使用，如"admin"，这个是唯一的
      */
-    @Column(name = "role", length = 20, unique = true)
-    private String role;
+    @Column(name = "code", length = 20, unique = true)
+    private String code;
 
     /**
-     * 角色-权限关系
+     * 角色-菜单关系
      * 多对多
      * 级联操作
-     * 立即加载
-     * 关系在role中维护，所以permission是被维护方，role是维护方
+     * 懒加载
+     * 关系在role中维护，所以menu是被维护方，role是维护方
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.EAGER)
-    private Set<Permission> permissions = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.LAZY)
+    private Set<Menu> menus = new HashSet<>();
 
     /**
      * 角色-用户关系
@@ -49,20 +54,28 @@ public class Role extends IdEntity {
     public Role() {
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Set<Permission> getPermissions() {
-        return permissions;
+    public String getCode() {
+        return code;
     }
 
-    public void setPermissions(Set<Permission> permissions) {
-        this.permissions = permissions;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Set<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(Set<Menu> menus) {
+        this.menus = menus;
     }
 
     public Set<User> getUsers() {

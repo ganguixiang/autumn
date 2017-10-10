@@ -7,5 +7,5 @@ import com.ggxspace.autumn.repository.AbstractRepository;
  * 权限仓库接口
  * Created by ganguixiang on 2017/9/27.
  */
-public interface PermissionRepository extends AbstractRepository<Permission>, PermissionRepositoryCustom {
-}
+//public interface PermissionRepository extends AbstractRepository<Permission>, PermissionRepositoryCustom {
+//}

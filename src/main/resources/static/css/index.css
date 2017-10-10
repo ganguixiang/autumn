@@ -20,14 +20,36 @@
 }
 
 #sidebar {
-    /*min-width: 200px;*/
-    background-color: #324157;
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: block;
+    position: absolute;
+    width: 250px;
+    left: 0;
+    top: 70px;
+    bottom: 0;
+    background: #324157;
 }
 #tabs {
-    padding-left: 2px;
+    background: none repeat scroll 0 0 #fff;
+    position: absolute;
+    left: 250px;
+    right: 0;
+    top: 70px;
+    bottom: 0;
+    width: auto;
+    padding: 5px, 10px;
+    box-sizing: border-box;
+    overflow-y: scroll;
 }
 .content {
     padding-left: 10px;
+}
+.handle-box {
+    margin-bottom: 20px;
+}
+.toolbar {
+    margin: 5px 0;
+}
+.pagination {
+    margin: 20px 0;
+    text-align: center;
 }
