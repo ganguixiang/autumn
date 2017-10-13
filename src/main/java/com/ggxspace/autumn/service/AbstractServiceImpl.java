@@ -100,6 +100,9 @@ public class AbstractServiceImpl<T extends IdEntity> implements AbstractService<
     }
 
     public T update(T entity) {
+        // 更新时间
+        entity.setModifyDate(new Date());
+        // TODO 更新人
         return repository.update(entity);
     }
 

@@ -44,7 +44,7 @@
     padding-left: 10px;
 }
 .handle-box {
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
 }
 .toolbar {
     margin: 5px 0;
@@ -52,4 +52,7 @@
 .pagination {
     margin: 20px 0;
     text-align: center;
+}
+.el-button+.el-button {
+    margin-left: 0;
 }

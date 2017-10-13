@@ -1,9 +1,11 @@
 package com.ggxspace.autumn.tree;
 
 import com.ggxspace.autumn.entity.system.Menu;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -38,6 +40,9 @@ public class TreeUtil {
     private static <T extends Tree> T findChildren(T tree, List<T> trees) {
         trees.stream().forEach(t -> {
             if (StringUtils.isNotEmpty(t.getParentId()) && t.getParentId().equals(tree.getId())) {
+                if (CollectionUtils.isEmpty(tree.getChildren())) {
+                    tree.setChildren(new HashSet<>());
+                }
                 tree.getChildren().add(findChildren((T) t, trees));
             }
         });

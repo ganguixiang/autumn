@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 角色Controller
+ * 菜单Controller
  * Created by ganguixiang on 2017/9/28.
  */
 @RestController
@@ -85,19 +85,19 @@ public class MenuController {
      * @param id
      * @return
      */
-    @DeleteMapping(value = {"delete/{id}"})
-    public Result delete(@PathVariable String id) {
+    @DeleteMapping(value = "delete")
+    public Result delete(String id) {
         menuService.delete(id);
         return new Result<>();
     }
 
     /**
-     * 根据主键获取详情
+     * 编辑
      * @param id
      * @return
      */
-    @GetMapping(value = "/{id}")
-    public Result detail(@PathVariable String id) {
+    @GetMapping(value = "update")
+    public Result goUpdate(String id) {
         Menu menu = menuService.get(id);
         return new Result<>(menu);
     }

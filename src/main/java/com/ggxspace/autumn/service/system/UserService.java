@@ -8,5 +8,6 @@ import com.ggxspace.autumn.service.AbstractService;
  * Created by ganguixiang on 2017/9/27.
  */
 public interface UserService extends AbstractService<User> {
-
+    User findByUsername(String username);
+    boolean validateUsername(String id, String username);
 }

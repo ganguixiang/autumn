@@ -1,4 +1,4 @@
-package com.ggxspace.autumn.config;
+package com.ggxspace.autumn.configuration;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;

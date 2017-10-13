@@ -49,7 +49,7 @@
             </el-table>
         </div>
         <!-- 添加菜单对话框 -->
-        <div th:replace="/menu/add :: add"></div>
+        <!--<div th:replace="/menu/add :: add"></div>-->
         <!-- 编辑菜单对话框 -->
         <div th:replace="/menu/edit :: edit"></div>
 
@@ -59,6 +59,7 @@
             </el-tree>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelect">取 消</el-button>
+                <el-button type="info" @click="asRootMenu">作为根菜单</el-button>
                 <el-button type="primary" @click="confirmSelect">确 定</el-button>
             </div>
         </el-dialog>

@@ -1,13 +1,33 @@
 var menu = new Vue({
     el: '#menu',
     data: {
-        // 添加对话框显示/隐藏标志
-        addDialogVisible: false,
+        // 表单校验规则
+        rules: {
+            name: [
+                {
+                    required: true,
+                    message: '请输入菜单名称',
+                    tirgger: 'blur'
+                },
+                {
+                    min: 1,
+                    max: 20,
+                    message: '长度在1到20个字符',
+                    tirgger: 'blur'
+                }
+            ],
+            url: [
+                {
+                    required: true,
+                    message: "请输入路径"
+                }
+            ]
+        },
         // 编辑对话框显示/隐层标志
-        updateDialogVisible: false,
+        editDialogVisible: false,
         // 选择上级菜单对话框显示/隐层标志
         selectParentDialogVisible: false,
-        formLabelWidth: '120px',
+        // 树形表格表头属性
         columns: [
             {
                 text: '名称',
@@ -21,11 +41,8 @@ var menu = new Vue({
                 text: '类型',
                 dataIndex: 'type'
             },
-            {
-                text: '权限',
-                dataIndex: 'permission'
-            }
         ],
+        // 是否展开所有
         expandAll: false,
         // 菜单列表
         menus: [],
@@ -42,6 +59,7 @@ var menu = new Vue({
         selectedParentName: '',// 选中的上级菜单名称
         // 选择上级菜单树列表
         parentTree: [],
+
     },
     mounted: function() {
         // console.log('mounted');
@@ -49,82 +67,85 @@ var menu = new Vue({
         pullData();
     },
     methods: {
-        handleOpen: function (key, keyPath) {
-            console.log(key, keyPath);
-        },
-        handleClose: function (key, keyPath) {
-            console.log(key, keyPath);
-        },
-        toggleSelection: function (rows) {
-            if (rows) {
-                for (var i = 0; i < rows.length; i++) {
-                    this.$refs.table.toggleRowSelection(rows[i]);
-                }
-            } else {
-                this.$refs.table.clearSelection();
-            }
-        },
-        handleSelectionChange: function (val) {
-            this.multipleSelection = val;
-        },
-        handleSizeChange: function (val) {
-            console.log("每页 ${val} 条");
-        },
-        handleCurrentChange: function (val) {
-            console.log("当前页: ${val}");
-        },
-        closeDialog: function(visibleFlag) {
+        // 取消
+        cancel: function() {
             var _this = this;
             this.$confirm('您还没有保存，是否退出?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(function() {
-                _this._data[visibleFlag] = false;
+                _this.editDialogVisible = false;
             }).catch(function() {
 
             });
         },
+        // 打开添加对话框
         goAdd: function() {
             // 清空menu
-            this.menu = {};
-            this.addDialogVisible = true;
+            this.menu = {
+                // 默认菜单
+                type: 'MENU',
+                // 默认顺序
+                menuOrder: '1',
+            };
+            this.editDialogVisible = true;
+            // console.log('id = ' + id);
         },
+        // 添加
         doAdd: function () {
             var _this = this;
-            var url = contentPath + menuPath + '/save';
+            var url = contentPath + menuPath + 'save';
             // var data = JSON.stringify(this.menu);
             // console.log(data)
             ajax(url, this.menu, 'POST', null).then(function(data) {
                 // 关闭窗口
-                _this.addDialogVisible = false;
+                _this.editDialogVisible = false;
                 success("添加成功");
                 pullData();
             });
 
         },
+        // 打开编辑对话框
         goUpdate: function (id) {
             var _this = this;
-            console.log('id = ' + id);
-            var url = contentPath + menuPath + '/' + id;
+            // console.log('id = ' + id);
+            var url = contentPath + menuPath + 'update?id=' + id;
             ajax(url, null, 'GET', null).then(function(data) {
                 _this.menu = data.data;
                 // 打开编辑窗口
-                _this.updateDialogVisible = true;
+                _this.editDialogVisible = true;
             });
 
         },
+        // 更新
         doUpdate: function () {
             var _this = this;
-            var url = contentPath + menuPath + '/update';
+            var url = contentPath + menuPath + 'update';
             // var data = JSON.stringify(this.menu);
             // console.log(data);
             ajax(url, this.menu, 'POST', null).then(function(data) {
                 console.log('success: ' + data);
                 // 关闭窗口
-                _this.updateDialogVisible = false;
+                _this.editDialogVisible = false;
                 success("更新成功");
                 pullData();
+            });
+        },
+        // 保存
+        doSave: function() {
+            // log('保存');
+            var _this = this;
+            this.$refs.form.validate(function(valid) {
+                if (valid) {
+                    // 存在id则更新
+                    if (_this.menu.id) {
+                        _this.doUpdate();
+                    } else { // 不存在id则保存
+                        _this.doAdd();
+                    }
+                }
+                return false;
             });
         },
         doDelete: function(id) {
@@ -136,7 +157,7 @@ var menu = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(function() {
-                var url = contentPath + menuPath + '/delete/' + id;
+                var url = contentPath + menuPath + 'delete?id=' + id;
                 ajax(url, null, 'DELETE', null).then(function(data) {
                     success("删除成功");
                     pullData();
@@ -147,11 +168,16 @@ var menu = new Vue({
         },
         // 添加下级菜单
         goAddChildren: function(row) {
-            // 清空
-            this.menu = {};
+            // 清空menu
+            this.menu = {
+                // 默认菜单
+                type: 'MENU',
+                // 默认顺序
+                menuOrder: '1',
+            };
             this.menu.parentId = row.id;
             this.menu.parentName = row.name;
-            this.addDialogVisible = true;
+            this.editDialogVisible = true;
         },
         /******************************* 树操作方法 *******************************************/
         // 是否显示行
@@ -173,30 +199,13 @@ var menu = new Vue({
                     // _this.appendChildren(index);
                     item._loading = false;
                     item._expanded = true;
-                }, 1000);
+                }, 10);
 
             } else {
                 item._expanded = false;
             }
 
 //				console.log(item);
-
-        },
-        // 添加子节点
-        appendChildren: function(index) {
-            var d = [{
-                id: 1 - 1,
-                parentId: 1,
-                name: '测试1-1',
-                age: 18,
-                sex: '男',
-            }];
-            var _this = this
-            var record = _this.menuTrees[index];
-            var c = treeToArray(d, record, false);
-            console.log('c = ' + c);
-            record.children = c;
-            record._loading = false;
 
         },
         // 显示层级关系的空格和图标
@@ -248,15 +257,21 @@ var menu = new Vue({
             this.menu.parentName = this.selectedParentName;
             // 隐藏选择上级菜单对话框
             this.selectParentDialogVisible = false;
+        },
+        asRootMenu: function() {
+            this.menu.parentId = "";
+            this.menu.parentName = "";
+            // 隐藏选择上级菜单对话框
+            this.selectParentDialogVisible = false;
         }
     }
 });
 
 function  pullData() {
     var _this = menu;
-    var url = contentPath + menuPath + '/list';
+    var url = contentPath + menuPath + 'list';
     ajax(url, '', 'GET', {}).then(function(data) {
-        console.log('success: ' + JSON.stringify(data));
+        // console.log('success: ' + JSON.stringify(data));
         menu.menus = data.data;
         menu.menuTrees = treeToArray(data.data, null, menu.expandAll);
 

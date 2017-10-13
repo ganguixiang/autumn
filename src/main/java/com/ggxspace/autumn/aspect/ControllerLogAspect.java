@@ -1,6 +1,8 @@
 package com.ggxspace.autumn.aspect;
 
+import com.ggxspace.autumn.exception.AutumnException;
 import com.ggxspace.autumn.vo.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +14,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 /**
  * Created by ganguixiang on 2017/9/29.
@@ -80,8 +83,27 @@ public class ControllerLogAspect {
         Result<?> result = new Result<>();
         LOGGER.error("{}", e);
         result.setCode(Result.FAIL);
-        result.setMessage(e.toString());
-
+        String message = "";
+        // 已知异常
+        if (e instanceof AutumnException) {
+            message = e.getMessage();
+        } else {
+            // hibernate validatetor 校验异常
+            Throwable causor = e.getCause();
+            while (null != causor) {
+                if (causor instanceof ConstraintViolationException) {
+                    // 获取校验错误提示信息
+                    message = ((ConstraintViolationException) causor).getConstraintViolations().iterator().next().getMessage();
+                    break;
+                }
+                causor = causor.getCause();
+            }
+            // 未知异常
+            if (StringUtils.isEmpty(message)) {
+                message = "未知错误，请联系管理员";
+            }
+        }
+        result.setMessage(message);
         return result;
     }
 

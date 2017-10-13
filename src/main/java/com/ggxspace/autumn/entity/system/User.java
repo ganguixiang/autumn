@@ -1,11 +1,16 @@
 package com.ggxspace.autumn.entity.system;
 
 import com.ggxspace.autumn.entity.IdEntity;
+import com.ggxspace.autumn.enums.UserStateEnum;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,8 +53,8 @@ public class User extends IdEntity {
      * 用户状态
      * 使用枚举类型，数据库中只保存枚举对应的String
      */
-//    @Enumerated(EnumType.STRING)
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private UserStateEnum state;
 
     /**
      * 注册日期
@@ -62,8 +67,14 @@ public class User extends IdEntity {
      * 立即加载
      * 关系在user中维护，所以role是被维护方，user是维护方
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Role> roles = new ArrayList<>();
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private List<Role> roles;
 
     public User() {
     }
@@ -108,11 +119,11 @@ public class User extends IdEntity {
         this.salt = salt;
     }
 
-    public String getState() {
+    public UserStateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(UserStateEnum state) {
         this.state = state;
     }
 

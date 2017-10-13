@@ -28,14 +28,14 @@ public class MenuTree extends Tree {
     /**
      * 权限字符串
      */
-    private String permission;
+//    private String permission;
 
     public MenuTree (Menu menu) {
         super(menu);
         this.name = menu.getName();
         this.url = menu.getUrl();
-        this.type = menu.getType();
-        this.permission = menu.getPermission();
+        this.type = menu.getType().getLabel();
+//        this.permission = menu.getPermission();
     }
 
     public String getName() {
@@ -62,13 +62,13 @@ public class MenuTree extends Tree {
         this.type = type;
     }
 
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
+//    public String getPermission() {
+//        return permission;
+//    }
+//
+//    public void setPermission(String permission) {
+//        this.permission = permission;
+//    }
 
     @Override
     public String toString() {
@@ -76,7 +76,7 @@ public class MenuTree extends Tree {
                 "name='" + name + '\'' +
                 ", url='" + url + '\'' +
                 ", type='" + type + '\'' +
-                ", permission='" + permission + '\'' +
+//                ", permission='" + permission + '\'' +
                 '}';
     }
 }

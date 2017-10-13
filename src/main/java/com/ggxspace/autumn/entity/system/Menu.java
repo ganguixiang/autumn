@@ -1,15 +1,21 @@
 package com.ggxspace.autumn.entity.system;
 
-import com.ggxspace.autumn.entity.IdEntity;
 import com.ggxspace.autumn.entity.TreeEntity;
+import com.ggxspace.autumn.enums.MenuTypeEnum;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -22,6 +28,8 @@ public class Menu extends TreeEntity {
     /**
      * 菜单名称
      */
+    @NotBlank(message = "菜单名称不能为空")
+    @Size(min = 1, max = 20, message = "角色名称长度必须在{min}和{max}之间")
     private String name;
 
     /**
@@ -31,36 +39,35 @@ public class Menu extends TreeEntity {
 
     /**
      * 菜单路径
+     * 唯一
      */
+    @Column(unique = true)
+    @NotBlank(message = "路径不能为空")
+    @Pattern(regexp = "^/.*?", message = "无效的路径地址")
     private String url;
 
     /**
      * 菜单顺序
      */
+    @Min(value = 1, message = "顺序在1-10之间")
+    @Max(value = 10, message = "顺序在1-10之间")
     private Integer menuOrder;
 
     /**
      * 菜单类型
-     * menu - 菜单
-     * button - 按钮
+     * MENU - 菜单
+     * PERMISSION - 权限
      */
-//    @Column(name = "type", length = 10, columnDefinition = "enum('menu', 'button')")
-    private String type;
-
-    /**
-     * 权限字符串
-     * menu例子：role:*
-     * button例子：role:create，role:update，role:delete，role:view
-     */
-    private String permission;
+    @NotNull(message = "类型不能为空")
+    @Enumerated(EnumType.STRING)
+    private MenuTypeEnum type;
 
     /**
      * 角色-菜单关系
      * 多对多
-     * 关系在role中维护，所以menu是被维护方，role是维护方
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "menus")
-    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(mappedBy = "menus", fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     public String getName() {
         return name;
@@ -94,20 +101,12 @@ public class Menu extends TreeEntity {
         this.menuOrder = menuOrder;
     }
 
-    public String getType() {
+    public MenuTypeEnum getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(MenuTypeEnum type) {
         this.type = type;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
     }
 
     public Set<Role> getRoles() {
@@ -126,7 +125,6 @@ public class Menu extends TreeEntity {
                 ", url='" + url + '\'' +
                 ", menuOrder=" + menuOrder +
                 ", type='" + type + '\'' +
-                ", permission='" + permission + '\'' +
                 ", roles=" + roles +
                 '}';
     }

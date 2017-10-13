@@ -60,7 +60,8 @@ public class RoleController {
     @GetMapping(value = "list")
     public Result list() {
         List<Role> roles = roleService.findAll();
-        return new Result<>(roles);
+        List<RoleDTO> roleDTOS = RoleDTO.toRoleDTO(roles);
+        return new Result<>(roleDTOS);
     }
 
     /**
@@ -90,26 +91,31 @@ public class RoleController {
      * @param id
      * @return
      */
-    @DeleteMapping(value = {"delete/{id}"})
-    public Result delete(@PathVariable String id) {
+    @DeleteMapping(value = {"delete"})
+    public Result delete(String id) {
         roleService.delete(id);
         return new Result<>();
     }
 
     /**
-     * 根据主键获取详情
+     * 编辑
      * @param id
      * @return
      */
-    @GetMapping(value = "/{id}")
-    public Result detail(@PathVariable String id) {
+    @GetMapping(value = "update")
+    public Result goUpdate(String id) {
         Role role = roleService.get(id);
         RoleDTO dto = new RoleDTO(role);
         return new Result<>(dto);
     }
 
-    @GetMapping(value = "/{id}/go-select-menu")
-    public Result goSelectMenu(@PathVariable String id) {
+    /**
+     * 跳转设置权限页面
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "go-select-menu")
+    public Result goSelectMenu(String id) {
         Role role = roleService.get(id);
         List<Menu> menus = menuService.findAll();
         List<MenuTree> menuTrees = TreeUtil.buildMenuTree(menus);
@@ -126,12 +132,29 @@ public class RoleController {
         return new Result(map);
     }
 
-    @PostMapping(value = "/{id}/update-menu")
-    public Result updateMenu(@PathVariable String id, @RequestBody String[] menuIds) {
+    /**
+     * 更新角色权限
+     * @param id
+     * @param menuIds
+     * @return
+     */
+    @PostMapping(value = "update-menu")
+    public Result updateMenu(String id, @RequestBody String[] menuIds) {
         Role role = roleService.get(id);
         List<Menu> menus = menuService.findAll(Arrays.asList(menuIds));
         role.setMenus(new HashSet<>(menus));
         roleService.update(role);
         return new Result(role);
+    }
+
+    /**
+     * 验证code是否已经存在
+     * @param code
+     * @return
+     */
+    @GetMapping(value = "validate-code")
+    public Result validateCode(String id, String code) {
+        Boolean result = roleService.validateCode(id, code);
+        return new Result(result);
     }
 }

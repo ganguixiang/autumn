@@ -82,3 +82,19 @@ function warning(message) {
         message: message
     })
 }
+
+/**
+ * 判断是否是数字和字母的组合
+ * @param value
+ * @returns {boolean}
+ */
+function checkLetterAndNumber(value)
+{
+    var re =  /^[0-9a-zA-Z]*$/g;  //判断字符串是否为数字和字母组合     //判断正整数 /^[1-9]+[0-9]*]*$/
+    if (!re.test(value))
+    {
+        return false;
+    }else{
+        return true;
+    }
+}

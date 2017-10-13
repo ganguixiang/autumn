@@ -43,10 +43,29 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
+    public static <T> Result ok(T data) {
+        return new Result(data);
+    }
+
+    public static <T> Result ok() {
+        return new Result(null);
+    }
+
 //    public Result(Throwable e) {
 //        this.message = e.toString();
 //        this.code = FAIL;
 //    }
+
+    public static Result error() {
+        return error("error");
+    }
+
+    public static Result error(String message) {
+        Result result = new Result();
+        result.setCode(1);
+        result.setMessage(message);
+        return result;
+    }
 
     public int getCode() {
         return code;

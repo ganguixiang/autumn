@@ -2,6 +2,7 @@ package com.ggxspace.autumn.service.system.impl;
 
 import com.ggxspace.autumn.entity.system.Menu;
 import com.ggxspace.autumn.entity.system.User;
+import com.ggxspace.autumn.exception.AutumnException;
 import com.ggxspace.autumn.repository.system.MenuRepository;
 import com.ggxspace.autumn.service.AbstractServiceImpl;
 import com.ggxspace.autumn.service.system.MenuService;
@@ -25,39 +26,68 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
     private MenuRepository menuRepository;
 
     /**
-     * 保存
-     * @param menu
+     * 根据parentIds计算level
+     * @param parentIds
      * @return
      */
-    public Menu save(Menu menu) {
-        if (StringUtils.isNotEmpty(menu.getParentId())) {
+    private Integer calculateLevel(String parentIds) {
+        if (StringUtils.isNotEmpty(parentIds)) {
+            String[] parents = parentIds.split(",");
+            return parents.length;
+        }
+        return 0;
+    }
+
+    /**
+     * 格式化菜单，设置parentId/parentIds/parentName/level
+     * @param menu
+     */
+    private void format(Menu menu) {
+        String parentIds = "";
+        if (StringUtils.isEmpty(menu.getParentId())) {
+            menu.setParentId("");
+            menu.setParentName("");
+        } else {
             // 设置parentIds
             // 数据库查询得到parent，该菜单的parentIds等于parent的parentIds加上parent的id，逗号分割
             Menu parent = super.get(menu.getParentId());
-            // 格式：8a8abca65f042848015f042969a70000,8a8abca65f042c69015f042d4ea90000
-            String parentIds = "";
+
             if (StringUtils.isNotEmpty(parent.getParentIds())) {
                 parentIds = String.format("%s,%s", parent.getParentIds(), parent.getId());
             } else {
                 parentIds = String.format("%s", parent.getId());
             }
-            menu.setParentIds(parentIds);
         }
+
+        menu.setParentIds(parentIds);
+        menu.setLevel(calculateLevel(parentIds));
+    }
+
+    /**
+     * 保存
+     * @param menu
+     * @return
+     */
+    public Menu save(Menu menu) {
 
         // 设置label
         menu.setLabel(menu.getName());
-
-        // 设置level
-        if (StringUtils.isNotEmpty(menu.getParentIds())) {
-            String[] parents = menu.getParentIds().split(",");
-            menu.setLevel(parents.length);
-        } else {
-            menu.setLevel(0);
-        }
+        // 格式化菜单
+        format(menu);
 
         // 保存
         super.save(menu);
         return menu;
+    }
+
+    private Boolean equals(String s1, String s2) {
+        if (StringUtils.isEmpty(s1) && StringUtils.isNotEmpty(s2)) {
+            return false;
+        }
+        if (StringUtils.isNotEmpty(s1) && !s1.equals(s2)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -68,16 +98,19 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
      */
     public Menu update(Menu menu) {
         if (StringUtils.isNotEmpty(menu.getParentId()) && menu.getParentId().equals(menu.getId())) {
-            throw new RuntimeException("请不要选择当前菜单作为上级菜单");
+            throw new AutumnException("请不要选择当前菜单作为上级菜单");
         }
         Menu m = super.get(menu.getId());
         // 修改父菜单，当菜单的子菜单数量为0时才允许修改
-        if (!m.getParentId().equals(menu.getParentId())) {
+        if (!equals(m.getParentId(), menu.getParentId())) {
             List<Menu> children = menuRepository.findByParentId(menu.getId());
             if (CollectionUtils.isNotEmpty(children)) {
-                throw new RuntimeException("当前菜单还有子菜单，不允许修改当前菜单的上级菜单");
+                throw new AutumnException("当前菜单还有子菜单，不允许修改当前菜单的上级菜单");
             }
+            // 上级菜单改变需要格式化菜单
+            format(menu);
         }
+
         // 更新
         super.update(menu);
         return menu;
@@ -90,7 +123,7 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
     public void delete(String id) {
         List<Menu> children = menuRepository.findByParentId(id);
         if (CollectionUtils.isNotEmpty(children)) {
-            throw new RuntimeException("当前菜单还有子菜单，不允许删除");
+            throw new AutumnException("当前菜单还有子菜单，不允许删除");
         }
         super.delete(id);
     }

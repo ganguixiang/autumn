@@ -1,0 +1,59 @@
+<html lang="ZH" xmlns:th="http://www.thymeleaf.org">
+    <div id="user">
+        <div class="handle-box">
+            <el-row :gutter="10">
+                <el-col :span="6">
+                    <el-input v-model="input" size="small" style="padding-top: 5px;" placeholder="请输入用户名">
+                        <template slot="prepend">用户名</template>
+                    </el-input>
+                </el-col>
+            </el-row>
+
+        </div>
+        <div class="toolbar">
+            <el-button type="primary" size="small" icon="search">搜索</el-button>
+            <el-button type="primary" size="small" icon="add" @click="goAdd">添加</el-button>
+        </div>
+        <div class="table">
+            <el-table height="500" ref="table" :data="users" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55">
+                </el-table-column>
+                <el-table-column prop="username" label="用户名" width="120">
+                </el-table-column>
+                <el-table-column prop="nickname" label="昵称" width="120">
+                </el-table-column>
+                <el-table-column prop="roles" label="角色" width="200">
+                </el-table-column>
+                <el-table-column prop="state" label="状态" width="120">
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template scope="scope">
+                        <el-button type="primary" size="small" @click="goUpdate(scope.row.id)">编辑</el-button>
+                        <el-button type="success" size="small" @click="goSelectMenu(scope.row.id)">设置权限</el-button>
+                        <el-button type="danger" size="small" @click="doDelete(scope.row.id)">删除</el-button>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+            <div class="pagination">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="4000">
+
+                </el-pagination>
+            </div>
+        </div>
+        <!-- 编辑角色对话框 -->
+        <div th:replace="/user/edit :: edit"></div>
+
+        <el-dialog title="设置角色" :visible.sync="selectRoleDialogVisible" :close-on-press-escape=false :show-close=false size="tiny">
+            <el-checkbox-group v-model="selectedRoles">
+                <el-checkbox v-for="role in roles" :label="role.id">{{role.name}}</el-checkbox>
+            </el-checkbox-group>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSelect">取 消</el-button>
+                <el-button type="primary" @click="confirmSelect">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+    <script th:src="@{/js/user/list.js}" type="text/javascript" charset="utf-8"></script>
+</html>

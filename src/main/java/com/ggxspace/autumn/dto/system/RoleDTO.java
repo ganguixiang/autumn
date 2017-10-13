@@ -2,6 +2,9 @@ package com.ggxspace.autumn.dto.system;
 
 import com.ggxspace.autumn.entity.system.Role;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ganguixiang on 2017/9/28.
  */
@@ -21,6 +24,12 @@ public class RoleDTO extends BaseDTO {
         super(role);
         this.name = role.getName();
         this.code = role.getCode();
+    }
+
+    public static List<RoleDTO> toRoleDTO(List<Role> roles) {
+        List<RoleDTO> roleDTOS = new ArrayList<>();
+        roles.stream().forEach(r -> roleDTOS.add(new RoleDTO(r)));
+        return roleDTOS;
     }
 
     public String getName() {

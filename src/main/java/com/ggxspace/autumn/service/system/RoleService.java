@@ -9,4 +9,6 @@ import com.ggxspace.autumn.service.AbstractService;
  */
 public interface RoleService extends AbstractService<Role> {
 
+    Boolean validateCode(String id, String code);
+
 }
