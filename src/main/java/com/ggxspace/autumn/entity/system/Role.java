@@ -48,9 +48,8 @@ public class Role extends IdEntity {
      * 多对多
      * 级联操作
      * 懒加载
-     * 关系在role中维护，所以menu是被维护方，role是维护方
+     * 双向关联
      */
-//    @ManyToMany(cascade = CascadeType.ALL, fetch =  FetchType.LAZY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "role_menu",

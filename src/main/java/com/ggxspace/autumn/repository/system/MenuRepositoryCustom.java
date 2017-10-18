@@ -2,6 +2,7 @@ package com.ggxspace.autumn.repository.system;
 
 import com.ggxspace.autumn.entity.system.Menu;
 import com.ggxspace.autumn.entity.system.User;
+import com.ggxspace.autumn.enums.MenuTypeEnum;
 import com.ggxspace.autumn.repository.AbstractRepositoryCustom;
 
 import java.util.List;

@@ -12,7 +12,7 @@ import java.util.List;
  * 树工具类
  * Created by ganguixiang on 2017/10/10.
  */
-public class TreeUtil {
+public class TreeUtils {
 
     /**
      * 递归建树
@@ -57,7 +57,7 @@ public class TreeUtil {
     public static List<MenuTree> buildMenuTree(List<Menu> menus) {
         List<MenuTree> menuTrees = new ArrayList<>();
         menus.stream().forEach(menu -> menuTrees.add(new MenuTree(menu)));
-        List<MenuTree> mts = TreeUtil.buildTree(menuTrees);
+        List<MenuTree> mts = TreeUtils.buildTree(menuTrees);
         return mts;
     }
 }

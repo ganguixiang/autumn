@@ -2,6 +2,7 @@ package com.ggxspace.autumn.service.system.impl;
 
 import com.ggxspace.autumn.entity.system.Menu;
 import com.ggxspace.autumn.entity.system.User;
+import com.ggxspace.autumn.enums.MenuTypeEnum;
 import com.ggxspace.autumn.exception.AutumnException;
 import com.ggxspace.autumn.repository.system.MenuRepository;
 import com.ggxspace.autumn.service.AbstractServiceImpl;
@@ -60,7 +61,24 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
         }
 
         menu.setParentIds(parentIds);
+
         menu.setLevel(calculateLevel(parentIds));
+    }
+
+    /**
+     * 保存/更新前验证菜单是否符合规范
+     * @param menu
+     */
+    public void validateMenu(Menu menu) {
+        // 最多只能有3级菜单类型的菜单，level是从0开始
+        if (menu.getLevel() > 2 && MenuTypeEnum.MENU.equals(menu.getType())) {
+            throw new AutumnException("菜单类型的菜单级别不能大于3");
+        }
+        Menu parent = super.get(menu.getParentId());
+        // 权限类型菜单不能添加子菜单
+        if (MenuTypeEnum.PERMISSION.equals(parent.getType())) {
+            throw new AutumnException("权限类型菜单不能添加子菜单");
+        }
     }
 
     /**
@@ -75,6 +93,7 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
         // 格式化菜单
         format(menu);
 
+        validateMenu(menu);
         // 保存
         super.save(menu);
         return menu;
@@ -110,7 +129,7 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
             // 上级菜单改变需要格式化菜单
             format(menu);
         }
-
+        validateMenu(menu);
         // 更新
         super.update(menu);
         return menu;
@@ -125,6 +144,11 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
         if (CollectionUtils.isNotEmpty(children)) {
             throw new AutumnException("当前菜单还有子菜单，不允许删除");
         }
+
         super.delete(id);
+    }
+
+    public List<Menu> findByRoleIdsAndType(List<String> roleIds, MenuTypeEnum type) {
+        return menuRepository.findByRoles_idInAndType(roleIds, type);
     }
 }

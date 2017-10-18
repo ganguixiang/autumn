@@ -1,5 +1,7 @@
 package com.ggxspace.autumn.vo;
 
+import com.ggxspace.autumn.util.ObjectUtils;
+
 import java.io.Serializable;
 
 /**
@@ -21,9 +23,19 @@ public class Result<T> implements Serializable {
     public static final int NO_PERMISSION = 2;
 
     /**
+     * 登陆超时
+     */
+    public static final int LOGIN_TIMEOUT=  3;
+
+    /**
      * 状态码
      */
     private int code = SUCCESS;
+
+    /**
+     * 是否成功
+     */
+    private Boolean isSuccess = true;
 
     /**
      * 消息
@@ -44,17 +56,12 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result ok(T data) {
-        return new Result(data);
+        return new Result.Builder().data(data).build();
     }
 
     public static <T> Result ok() {
-        return new Result(null);
+        return new Result.Builder().build();
     }
-
-//    public Result(Throwable e) {
-//        this.message = e.toString();
-//        this.code = FAIL;
-//    }
 
     public static Result error() {
         return error("error");
@@ -66,6 +73,22 @@ public class Result<T> implements Serializable {
         result.setMessage(message);
         return result;
     }
+
+    public Result(Result<T> result) {
+        ObjectUtils.requireNonNull(result);
+        if (ObjectUtils.nonNull(result.code)) {
+            this.code = result.code;
+        }
+        if (ObjectUtils.nonNull(result.message)) {
+            this.message = result.message;
+        }
+        if (ObjectUtils.nonNull(result.isSuccess)) {
+            this.isSuccess = result.isSuccess;
+        }
+        this.data = result.data;
+    }
+
+
 
     public int getCode() {
         return code;
@@ -91,12 +114,54 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
+    public Boolean getSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(Boolean success) {
+        isSuccess = success;
+    }
+
     @Override
     public String toString() {
         return "Result{" +
                 "code=" + code +
+                ", isSuccess=" + isSuccess +
                 ", message='" + message + '\'' +
                 ", data=" + data +
                 '}';
+    }
+
+    // Builder模式
+    public static class Builder {
+        private Result result;
+
+        public Builder() {
+            result = new Result();
+        }
+
+        public Builder code(int code) {
+            result.code = code;
+            return this;
+        }
+
+        public Builder isSuccess(Boolean isSuccess) {
+            result.isSuccess = isSuccess;
+            return this;
+        }
+
+        public Builder message(String message) {
+            result.message = message;
+            return this;
+        }
+
+        public <T> Builder data(T data) {
+            result.data = data;
+            return this;
+        }
+
+        public Result build() {
+            return new Result(result);
+        }
     }
 }

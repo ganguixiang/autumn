@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -20,6 +22,8 @@ import java.util.Set;
 
 /**
  * 菜单实体
+ * 最多只能有3级菜单类型的菜单
+ * 权限类型的菜单不能添加子菜单
  * Created by ganguixiang on 2017/10/9.
  */
 @Entity
@@ -65,8 +69,14 @@ public class Menu extends TreeEntity {
     /**
      * 角色-菜单关系
      * 多对多
+     * 双向关联
      */
-    @ManyToMany(mappedBy = "menus", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_menu",
+            joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
     private Set<Role> roles;
 
     public String getName() {

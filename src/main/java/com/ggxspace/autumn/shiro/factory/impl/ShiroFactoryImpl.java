@@ -53,7 +53,12 @@ public class ShiroFactoryImpl implements ShiroFactory {
     public ShiroUser createShiroUser(User user) {
         ShiroUser shiroUser = new ShiroUser(user);
         // 把角色列表放入shiroUser中
-        user.getRoles().stream().forEach(r -> shiroUser.getRoles().add(r.getCode()));
+        user.getRoles().stream().forEach(r -> {
+            // 角色名称
+            shiroUser.getRoles().add(r.getCode());
+            // 角色id
+            shiroUser.getRoleIds().add(r.getId());
+        });
         return shiroUser;
     }
 

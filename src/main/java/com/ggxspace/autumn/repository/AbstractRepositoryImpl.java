@@ -24,7 +24,7 @@ import java.util.List;
 public class AbstractRepositoryImpl<T extends IdEntity> implements AbstractRepositoryCustom<T> {
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
     /**
      * T.class

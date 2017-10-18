@@ -24,9 +24,14 @@ public class ShiroUser {
     private String nickname;
 
     /**
-     * 角色列表
+     * 角色名称列表
      */
     private Set<String> roles = new HashSet<>();
+
+    /**
+     * 角色id列表
+     */
+    private Set<String> roleIds = new HashSet<>();
 
     public ShiroUser() {
     }
@@ -67,5 +72,13 @@ public class ShiroUser {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public Set<String> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(Set<String> roleIds) {
+        this.roleIds = roleIds;
     }
 }

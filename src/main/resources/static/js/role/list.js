@@ -229,8 +229,15 @@ var role = new Vue({
             var _this = this;
             var url = contentPath + rolePath + '/update-menu?id=' + this.role.id;
             ajax(url, menuIds, 'POST', {"traditional" : true}).then(function(data) {
-                _this.$message({type:"success", message:"设置权限成功"});
-                _this.selectMenuDialogVisible = false;
+
+                // 设置权限成功后，需要调用接口刷新一下权限，这样设置才能马上生效
+                var u = contentPath + rolePath + 'refresh-permission';
+                ajax(u, null, 'GET', {}).then(function(data) {
+                    _this.$message({type:"success", message:"设置权限成功"});
+                    _this.selectMenuDialogVisible = false;
+                    pullData();
+                });
+
             });
 
         }

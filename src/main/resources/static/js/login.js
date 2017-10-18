@@ -55,7 +55,7 @@ var login = new Vue({
                             message: "登陆成功"
                         });
                         // 跳转到首页
-                        window.location.href = "/";
+                        window.location.href = contentPath;
                     } else {
                         _this.$message({
                             type: 'error',

@@ -1,9 +1,14 @@
 package com.ggxspace.autumn.shiro;
 
+import com.ggxspace.autumn.util.ObjectUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -60,5 +65,63 @@ public class ShiroUtils {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取当前subject
+     * @return
+     */
+    public static Subject getSubject() {
+        return SecurityUtils.getSubject();
+    }
+
+    /**
+     * 获取当前登录用户
+     * @return
+     */
+    public static ShiroUser getCurrentUser() {
+        Subject subject = getSubject();
+        if (ObjectUtils.isNull(subject)) {
+            return null;
+        }
+        ShiroUser currentUser = (ShiroUser) subject.getPrincipal();
+        return currentUser;
+    }
+
+    /**
+     * 获取当前登录用户名称
+     * @return
+     */
+    public static String getCurrentUsername() {
+        ShiroUser currentUser = getCurrentUser();
+        if (ObjectUtils.isNull(currentUser)) {
+            return null;
+        }
+        String username = currentUser.getUsername();
+        return username;
+    }
+
+    /**
+     * 获取当前用户的角色
+     * @return
+     */
+    public static List<String> getCurrentUserRoles() {
+        ShiroUser currentUser = getCurrentUser();
+        if (ObjectUtils.isNull(currentUser)) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(currentUser.getRoles());
+    }
+
+    /**
+     * 获取当前用户的角色id
+     * @return
+     */
+    public static List<String> getCurrentUserRoleIds() {
+        ShiroUser currentUser = getCurrentUser();
+        if (ObjectUtils.isNull(currentUser)) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(currentUser.getRoleIds());
     }
 }

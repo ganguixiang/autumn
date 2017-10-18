@@ -7,8 +7,12 @@ var index = new Vue({
             name: '首页',
             content: '首页'
         }],
+        // 菜单
+        menutrees: [],
     },
     mounted: function() {
+        // 获取菜单列表
+        getUserMenus();
     },
     methods: {
         handleOpen: function(key, keyPath) {
@@ -65,15 +69,29 @@ var index = new Vue({
 });
 
 function getTemplate(id, url) {
+
     $.ajax({
         url: url,
         async: true,
         success: function(data) {
 //					console.log(data);
-            $('#'+id).html(data);
+            if (data.code == 3) {
+                error("登陆超时");
+            } else {
+                $('#'+id).html(data);
+            }
+
         },
         error: function(e) {
             $('#'+id).html("网络异常");
         }
+    })
+}
+
+function getUserMenus() {
+    var url = contentPath + 'user-menus';
+    ajax(url, null, 'GET', {}).then(function(data) {
+        log(data);
+        index.menutrees = data.data;
     })
 }

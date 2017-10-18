@@ -38,7 +38,7 @@ function ajax(url, data, type, options) {
  * @param e
  */
 function defaultRejectHandler(e) {
-    error(e.message);
+    error(e.message)
 }
 
 function log(message) {
@@ -69,7 +69,10 @@ function success(message) {
  * @param message
  */
 function error(message) {
-    index.$message.error(message);
+    index.$message({
+        'message': message,
+        'type': 'error',
+    });
 }
 
 /**

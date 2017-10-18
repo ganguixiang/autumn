@@ -2,13 +2,10 @@ package com.ggxspace.autumn.controller.system;
 
 import com.ggxspace.autumn.dto.system.RoleDTO;
 import com.ggxspace.autumn.dto.system.UserDTO;
-import com.ggxspace.autumn.entity.system.Menu;
 import com.ggxspace.autumn.entity.system.Role;
 import com.ggxspace.autumn.entity.system.User;
 import com.ggxspace.autumn.service.system.RoleService;
 import com.ggxspace.autumn.service.system.UserService;
-import com.ggxspace.autumn.tree.MenuTree;
-import com.ggxspace.autumn.tree.TreeUtil;
 import com.ggxspace.autumn.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 用户Controller
