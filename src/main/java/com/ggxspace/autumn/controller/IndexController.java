@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 首页Controller
@@ -38,8 +41,8 @@ public class IndexController extends CommonController {
     @GetMapping("/user-menus")
     public Result userMenus() {
         // 获取当前用户所拥有的菜单
-        List<Menu> menus = menuService.findByRoleIdsAndType(getCurrentUserRoleIds(), MenuTypeEnum.MENU);
-        List<MenuTree> menuTrees = TreeUtils.buildMenuTree(menus);
+        Set<Menu> menuSet = new LinkedHashSet<>(menuService.findByRoleIdsAndType(getCurrentUserRoleIds(), MenuTypeEnum.MENU));
+        List<MenuTree> menuTrees = TreeUtils.buildMenuTree(new ArrayList<>(menuSet));
         return new Result.Builder().data(menuTrees).build();
     }
 }
